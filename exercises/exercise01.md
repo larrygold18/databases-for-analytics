@@ -1,6 +1,6 @@
 # Exercise 01: World Database SQL Practice
 
-- Name:
+- Name: Sandra Otubushin
 - Course: Database for Analytics
 - Module: 1
 - Database Used: World Database
@@ -28,7 +28,11 @@ Why were these data types selected?
 
 ### Answer
 _Write your explanation here._
+country.Population is INT
+Population is a whole-number count of people (you don’t have 12.5 people), so an integer type makes sense. INT is also efficient and supports very large values, which is useful because some countries have populations in the tens or hundreds of millions.
 
+country.LifeExpectancy is DECIMAL(3.1)
+Life expectancy is often measured with one decimal place (example: 78.4 years). Using DECIMAL(3.1) stores values like 0.0 to 999.9 precisely without floating-point rounding errors. This is ideal for a metric where accuracy and consistent formatting matter.
 ### Screenshot
 _Show the table structure or DESCRIBE output._
 
@@ -46,7 +50,8 @@ DESCRIBE country;
 Why do you think this data type was selected?
 
 ### Answer
-_Write your explanation here._
+_Write your explanation here._country.IndepYear is SMALLINT
+A year value fits easily into a SMALLINT and takes less storage than an INT. It also makes sense because independence years are typically within a reasonable numeric range (ex: 1700–2025). The column is also allowed to be NULL, which is useful for countries/territories that may not have an independence year.
 
 ### Screenshot
 
@@ -65,7 +70,15 @@ Explain why your proposed data type might be better in some situations.
 
 ### Answer
 _Write your explanation here._
+A good alternative could be YEAR (MySQL YEAR type)
+Why it might be better:
+It clearly communicates that the value represents a year (more semantically meaningful than a generic number).
+It can enforce valid year formatting more naturally.
+It makes the data easier to understand and validate in tools and reports.
 
+When SMALLINT might still be better:
+If you want to store years outside MySQL YEAR supported ranges, or
+If you want to store special numeric values (like placeholders) — though that’s usually not recommended.
 ---
 
 ## Question 4
@@ -83,7 +96,7 @@ ORDER BY Name;
 ### Screenshot
 
 ![Q4 Screenshot](screenshots/q4_cities_sorted.png)
-
+q4_cities_sorted
 ---
 
 ## Question 5
@@ -101,7 +114,6 @@ ORDER BY GovernmentForm;
 ### Screenshot
 
 ![Q5 Screenshot](screenshots/q5_government_forms.png)
-
 ---
 
 ## Question 6
@@ -119,7 +131,6 @@ WHERE Continent = 'Oceania';
 ### Screenshot
 
 ![Q6 Screenshot](screenshots/q6_oceania.png)
-
 ---
 
 ## Question 7
@@ -136,7 +147,6 @@ FROM city;
 ### Screenshot
 
 ![Q7 Screenshot](screenshots/q7_city_countrycode.png)
-
 ---
 
 ## Question 8
