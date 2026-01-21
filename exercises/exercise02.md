@@ -117,11 +117,11 @@ Do **not** repeat any form of government more than once.
 ### SQL
 
 ```sql
--- Your SQL here
-```
-SELECT DISTINCT GovernmentForm
+-- SELECT DISTINCT GovernmentForm
 FROM country
 ORDER BY GovernmentForm;
+
+```
 
 ### Screenshot
 
