@@ -30,7 +30,7 @@ _Show evidence of how you determined this (for example, a COUNT query)._
 
 
 ```sql
--- SELECT COUNT(*) AS total_cities
+-- -- SELECT COUNT(*) AS total_cities
 FROM city;
 ```
 
@@ -65,6 +65,9 @@ ORDER BY country.Name, countrylanguage.Language;
 Using the World database, write the SQL command to **display each country name along with the name of each official language spoken in that country**.
 
 ### SQL
+
+
+```sql
 SELECT
     country.Name AS CountryName,
     countrylanguage.Language AS OfficialLanguage
@@ -72,10 +75,7 @@ FROM country
 JOIN countrylanguage
     ON country.Code = countrylanguage.CountryCode
 WHERE countrylanguage.IsOfficial = 'T'
-ORDER BY country.Name, countrylanguage.Language;
-
-```sql
---
+ORDER BY country.Name, countrylanguage.Language;--
 ```
 
 ### Screenshot
@@ -120,8 +120,8 @@ Do **not** repeat any form of government more than once.
 -- SELECT DISTINCT GovernmentForm
 FROM country
 ORDER BY GovernmentForm;
-
 ```
+
 
 ### Screenshot
 
