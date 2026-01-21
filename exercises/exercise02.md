@@ -1,6 +1,6 @@
 # Exercise 02: World Database – Joins, Grouping, and Data Quality
 
-- Name:
+- Name:Sandra Otubushin
 - Course: Database for Analytics
 - Module: 2
 - Database Used: World Database (PostgreSQL)
@@ -24,12 +24,14 @@ When importing records from `worldPGSQL.sql`, **how many cities were imported**?
 
 ### Answer
 _Write the number of cities imported._
-
+4079
 ### Screenshot
 _Show evidence of how you determined this (for example, a COUNT query)._
 
+
 ```sql
--- Your SQL here
+-- SELECT COUNT(*) AS total_cities
+FROM city;
 ```
 
 ![Q1 Screenshot](screenshots/q1_city_count.png)
@@ -43,7 +45,13 @@ Using the World database, write the SQL command to **display each country name a
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    country.Name AS CountryName,
+    countrylanguage.Language AS Language
+FROM country
+JOIN countrylanguage
+    ON country.Code = countrylanguage.CountryCode
+ORDER BY country.Name, countrylanguage.Language;
 ```
 
 ### Screenshot
@@ -57,9 +65,17 @@ Using the World database, write the SQL command to **display each country name a
 Using the World database, write the SQL command to **display each country name along with the name of each official language spoken in that country**.
 
 ### SQL
+SELECT
+    country.Name AS CountryName,
+    countrylanguage.Language AS OfficialLanguage
+FROM country
+JOIN countrylanguage
+    ON country.Code = countrylanguage.CountryCode
+WHERE countrylanguage.IsOfficial = 'T'
+ORDER BY country.Name, countrylanguage.Language;
 
 ```sql
--- Your SQL here
+--
 ```
 
 ### Screenshot
@@ -88,7 +104,8 @@ ON country.code = countrylanguage.countrycode;
 **In your own words**, describe what data the **second query returns that the first query does not**.
 
 ### Answer
-_Write your explanation here._
+The second query (the LEFT OUTER JOIN) returns all rows from the country table, including countries that do not have any matching rows in the countrylanguage table.
+The first query behaves like an INNER JOIN, so it only returns countries that have at least one matching row in countrylanguage. Any country without a related language record is excluded entirely from the result set.
 
 ---
 
@@ -102,6 +119,9 @@ Do **not** repeat any form of government more than once.
 ```sql
 -- Your SQL here
 ```
+SELECT DISTINCT GovernmentForm
+FROM country
+ORDER BY GovernmentForm;
 
 ### Screenshot
 
@@ -117,7 +137,13 @@ Label the column **"City or Country Name"**.
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT Name AS "City or Country Name"
+FROM city
+UNION
+SELECT Name
+FROM country
+ORDER BY "City or Country Name";
+
 ```
 
 ### Screenshot
@@ -134,7 +160,14 @@ Be sure to **sort by country name**.
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    country.Name AS CountryName,
+    COUNT(countrylanguage.Language) AS NumberOfLanguages
+FROM country
+LEFT JOIN countrylanguage
+    ON country.Code = countrylanguage.CountryCode
+GROUP BY country.Name
+ORDER BY country.Name;
 ```
 
 ### Screenshot
@@ -151,7 +184,13 @@ Be sure to **sort by language name**.
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    countrylanguage.Language AS Language,
+    COUNT(countrylanguage.CountryCode) AS NumberOfCountries
+FROM countrylanguage
+GROUP BY countrylanguage.Language
+ORDER BY countrylanguage.Language;
+
 ```
 
 ### Screenshot
@@ -169,7 +208,16 @@ Using the World database, write the SQL command to **list countries that have mo
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    country.Name AS CountryName,
+    COUNT(countrylanguage.Language) AS NumberOfOfficialLanguages
+FROM country
+JOIN countrylanguage
+    ON country.Code = countrylanguage.CountryCode
+WHERE countrylanguage.IsOfficial = 'T'
+GROUP BY country.Name
+HAVING COUNT(countrylanguage.Language) > 2
+ORDER BY country.Name;
 ```
 
 ### Screenshot
@@ -187,7 +235,13 @@ Using the World database, write the SQL command to **find cities where the distr
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT Name, CountryCode, District
+FROM city
+WHERE district IS NULL
+   OR TRIM(district) = ''
+   OR TRIM(TRANSLATE(district, '-–', '')) = ''
+ORDER BY countrycode, name;
+
 ```
 
 ### Screenshot
@@ -205,7 +259,15 @@ Using the World database, write the SQL command to **calculate the percentage of
 ### SQL
 
 ```sql
--- Your SQL here
+-SELECT
+    CAST(COUNT(CASE WHEN district IS NULL
+	OR TRIM(district) = ''
+	OR TRIM(TRANSLATE(district, '-–', '')) = '' THEN 1 END)
+	AS DECIMAL(10, 2)) * 100 / COUNT(*)
+	AS PercentageMissingDistrict
+FROM
+    city;
+-
 ```
 
 ### Screenshot
