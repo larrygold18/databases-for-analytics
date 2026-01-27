@@ -24,10 +24,10 @@
 When importing the documents from `restaurants-json.json`, **how many documents were imported into your collection**?
 
 ### Answer
-_Write the number of documents imported._
+
 25358
 ### Screenshot
-_Show evidence of how you determined this (for example, a count query)._
+
 
 ```javascript
  db.restaurants.countDocuments()
@@ -77,7 +77,7 @@ Using your `restaurants` collection in the `44661` database, write the MongoDB q
 ### MongoDB Query
 
 ```javascript
-// db.restaurants.countDocuments({ borough: "Queens" })
+ db.restaurants.countDocuments({ borough: "Queens" })
 ```
 
 ### Screenshot
