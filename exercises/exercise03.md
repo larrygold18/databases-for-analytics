@@ -26,12 +26,14 @@ When importing the documents from `restaurants-json.json`, **how many documents 
 ### Answer
 
 25358
-### Screenshot
 
+
+### MongoDB Command
 
 ```javascript
  db.restaurants.countDocuments()
 ```
+### Screenshot
 
 ![Q1 Screenshot](screenshots/q1_document_count.png)
 
