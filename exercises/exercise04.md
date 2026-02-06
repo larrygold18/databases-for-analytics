@@ -31,7 +31,16 @@ Considering the World database, write a SQL statement that will **display the na
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    c.Name AS country_name,
+    COUNT(cl.Language) AS official_language_count
+FROM country c
+JOIN countrylanguage cl
+    ON c.Code = cl.CountryCode
+WHERE cl.IsOfficial = 'T'
+GROUP BY c.Name
+HAVING COUNT(cl.Language) > 2
+ORDER BY official_language_count DESC;
 ```
 
 ### Screenshot
@@ -49,7 +58,18 @@ After the `create_engine` command is executed, **what are the three statements r
 ### Python Code
 
 ```python
-# Your three Python statements here
+query = """
+SELECT
+    c.name AS "Country",
+    COUNT(*) AS "Number of Languages"
+FROM country AS c
+JOIN countrylanguage AS cl
+    ON cl.countrycode = c.code
+WHERE cl.isofficial = 'T'
+GROUP BY c.name
+HAVING COUNT(*) > 2
+ORDER BY "Number of Languages" DESC;
+"""
 ```
 
 ### Screenshot
@@ -69,7 +89,21 @@ Using **Jupyter Notebooks**, write the Python code needed to produce the followi
 ### Python Code
 
 ```python
-# Your Python code here
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
+
+fig, ax = plt.subplots(figsize=(12, 6))
+
+ax.bar(df['Country'], df['Number of Languages'], color='blue')
+ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
+ax.set_xlabel('Country')
+ax.set_ylabel('Number of Official Languages')
+ax.set_title('Countries with More Than 2 Official Languages')
+
+plt.xticks(rotation=45)
+plt.tight_layout()
+plt.show()
 ```
 
 ### Screenshot
