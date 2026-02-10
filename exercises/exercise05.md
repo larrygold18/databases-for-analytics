@@ -42,7 +42,11 @@ year
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT DISTINCT
+  EXTRACT(year FROM sent_date) AS year
+FROM public.emails
+ORDER BY year;
+
 ```
 
 ### Screenshot
@@ -65,7 +69,13 @@ count   year
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+  COUNT(*) AS count,
+  EXTRACT(YEAR FROM sent_date) AS year
+FROM emails
+GROUP BY year
+ORDER BY year;
+
 ```
 
 ### Screenshot
@@ -86,7 +96,15 @@ Only include emails that contain **both** a sent date and an opened date.
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+  sent_date,
+  opened_date,
+  opened_date - sent_date AS interval
+FROM emails
+WHERE sent_date IS NOT NULL
+  AND opened_date IS NOT NULL
+ORDER BY sent_date;
+
 ```
 
 ### Screenshot
@@ -102,7 +120,16 @@ Using the `sqlda` database, write the SQL needed to show emails that contain an 
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+  email_id,
+  sent_date,
+  opened_date
+FROM emails
+WHERE opened_date IS NOT NULL
+  AND sent_date IS NOT NULL
+  AND opened_date < sent_date
+ORDER BY sent_date;
+
 ```
 
 ### Screenshot
@@ -119,7 +146,7 @@ After looking at the data, **why is this the case?**
 
 ### Answer
 
-_Write your explanation here._
+The emails appear to be opened before they were sent due to data quality issues, such as timestamps being logged from different systems or time zones and sent dates being populated or updated after open events. This is a common issue in sample and real-world datasets.
 
 ### Screenshot (if requested by instructor)
 
@@ -160,7 +187,13 @@ CREATE TEMP TABLE customer_dealership_distance AS (
 
 ### Answer
 
-_Write your explanation here._
+The script creates temporary tables of geographic points for customers and dealerships, then computes the pairwise distance between every customer and every dealership:
+
+customer_points: keeps customer_id and a geometric point(longitude, latitude) for customers that have coordinates.
+
+dealership_points: same for dealerships.
+
+customer_dealership_distance: does a Cartesian product (every customer × every dealership) and computes c.lng_lat_point <@> d.lng_lat_point (a distance operator) to produce a table of distances between each customer and each dealership.
 
 ---
 
@@ -177,7 +210,12 @@ For example - dealership 1 is below:
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+    dealership_id,
+    ARRAY_AGG(last_name || ',' || first_name ORDER BY last_name, first_name) AS salespeople
+FROM salespeople
+GROUP BY dealership_id
+ORDER BY dealership_id;
 ```
 
 ### Screenshot
@@ -202,7 +240,18 @@ Reference image:
 ### SQL
 
 ```sql
--- Your SQL here
+SELECT d.dealership_id,
+d.state,
+COUNT(*) AS count,
+ARRAY_AGG(
+(s.last_name || ',' || s.first_name)
+ORDER BY s.salesperson_id
+) AS array_agg  
+FROM dealerships d
+JOIN salespeople s
+ON d.dealership_id = s.dealership_id
+GROUP BY d.dealership_id, d.state
+ORDER BY d.state,count;
 ```
 
 ### Screenshot
@@ -218,7 +267,10 @@ Using the `sqlda` database, write the SQL needed to convert the **customers** ta
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT row_to_json(c)
+   AS customer_json
+   FROM customers c;
+
 ```
 
 ### Screenshot
@@ -244,7 +296,18 @@ Reference image:
 ### SQL
 
 ```sql
--- Your SQL here
+-- SELECT
+  json_build_object(
+    'dealership_id', d.dealership_id,
+    'state', d.state,
+    'num_salespeople', COUNT(s.*),
+    'salespeople', json_agg((s.last_name || ', ' || s.first_name) ORDER BY s.salesperson_id)
+  ) AS dealership_json
+FROM dealerships d
+JOIN salespeople s
+  ON d.dealership_id = s.dealership_id
+GROUP BY d.dealership_id, d.state
+ORDER BY d.state, COUNT(s.*);
 ```
 
 ### Screenshot
