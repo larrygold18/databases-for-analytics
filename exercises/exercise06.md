@@ -121,4 +121,6 @@ In 1-2 short paragraphs, explain:
 
 #### Design Notes
 
-_Write your design notes here._
+I chose Date, Customer, and Part as my dimensions because they directly match the types of questions we need to answer. Date lets me analyze by day, month, quarter, and year. Customer supports analysis by individual customer and zip code. Part allows tracking specific part numbers like ax12 and broader categories such as appliance items. I intentionally left out orders, sales reps, and inventory since the requirements say they aren’t needed.
+
+I set the grain to one row per day per customer per part because the business process is daily sales. This keeps the fact table focused on just two measures: quantity and amount. With this design, I can easily answer questions like how many of ax12 were sold on a specific date, how much Customer 124 spent last year, and what the average daily sales were in a given quarter.
